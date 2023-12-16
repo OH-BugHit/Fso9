@@ -1,5 +1,5 @@
 import patientsData from "../../data/patients"; // haetaan json-data
-import { NonSensitivePatientEntry, Patient } from "../types";
+import { NewPatientEntry, NonSensitivePatientEntry, Patient } from "../types";
 import { v1 as uuid } from "uuid";
 const getEntries = (): Patient[] => {
   return patientsData;
@@ -15,10 +15,13 @@ const getNonSensitiveEntries = (): NonSensitivePatientEntry[] => {
   }));
 };
 
-const addPatient = (body: Patient) => {
-  body.id = uuid();
-  patientsData.push(body);
-  return body;
+const addPatient = (body: NewPatientEntry) => {
+  const newPatientEntry = {
+    id: uuid(),
+    ...body,
+  };
+  patientsData.push(newPatientEntry);
+  return newPatientEntry;
 };
 
 export default {
