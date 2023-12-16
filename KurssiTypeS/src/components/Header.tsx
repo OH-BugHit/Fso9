@@ -7,9 +7,9 @@ import { HeaderProps } from "../types";
  */
 const Header = (props: HeaderProps) => {
   return (
-    <p>
+    <div>
       <h1>{props.name}</h1>
-    </p>
+    </div>
   );
 };
 
