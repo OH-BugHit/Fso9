@@ -3,11 +3,12 @@ import Entry from "./Entry";
 
 const Entries = ({ entries }: { entries: NonSensitiveDiaryEntry[] }) => {
   return (
-    <p>
+    <div>
+      <h2>Diary entries</h2>
       {entries.map((entry: NonSensitiveDiaryEntry) => (
-        <Entry entry={entry} />
+        <Entry key={entry.id} entry={entry} />
       ))}
-    </p>
+    </div>
   );
 };
 

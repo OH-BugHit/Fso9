@@ -1,5 +1,6 @@
 import Header from "./components/Header";
 import Entries from "./components/Entries";
+import NewEnty from "./components/NewEntry";
 import { useEffect, useState } from "react";
 import { NonSensitiveDiaryEntry } from "../types";
 import { getAllDiaries } from "./services/diarySevice";
@@ -15,7 +16,8 @@ const App = () => {
 
   return (
     <div>
-      <Header name="Diary entries" />
+      <Header name="Olli's Flight Diary" />
+      <NewEnty diaries={diaries} setDiaries={setDiaries} />
       <Entries entries={diaries} />
     </div>
   );
