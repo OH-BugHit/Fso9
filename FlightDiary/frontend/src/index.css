@@ -1,20 +1,24 @@
 li {
   list-style-type: none;
+  margin-bottom: auto;
 }
 
 h3 {
   margin-bottom: auto;
 }
 
-.description {
+.details {
   margin-bottom: auto;
   margin-top: auto;
   font-weight: 100;
-  font-style: italic;
 }
 
-.requirements {
-  margin-bottom: auto;
+.date {
+  margin-bottom: 1%;
   margin-top: auto;
-  font-weight: 100;
+  font-weight: bold;
+}
+
+.entry {
+  margin-bottom: 2%;
 }
