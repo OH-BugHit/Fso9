@@ -28,6 +28,12 @@ export interface DiaryEntry {
   comment: string;
 }
 
+export interface NotifyMessage {
+  message: string;
+  messageType: string;
+  length: number;
+}
+
 export type NewDiaryEntry = Omit<DiaryEntry, "id">;
 
 export type NonSensitiveDiaryEntry = Omit<DiaryEntry, "comment">;

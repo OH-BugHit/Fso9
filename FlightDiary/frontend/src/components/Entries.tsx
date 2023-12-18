@@ -1,4 +1,4 @@
-import { NonSensitiveDiaryEntry } from "../../types";
+import { NonSensitiveDiaryEntry } from "../types";
 import Entry from "./Entry";
 
 const Entries = ({ entries }: { entries: NonSensitiveDiaryEntry[] }) => {

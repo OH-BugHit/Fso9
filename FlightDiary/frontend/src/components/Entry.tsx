@@ -1,4 +1,4 @@
-import { NonSensitiveDiaryEntry } from "../../types";
+import { NonSensitiveDiaryEntry } from "../types";
 
 const Entry = ({ entry: entry }: { entry: NonSensitiveDiaryEntry }) => {
   return (

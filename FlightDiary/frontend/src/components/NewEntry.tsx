@@ -3,16 +3,20 @@ import { addDiary } from "../services/diarySevice";
 import {
   NewDiaryEntry,
   NonSensitiveDiaryEntry,
+  NotifyMessage,
   Visibility,
   Weather,
-} from "../../types";
+} from "../types";
+import axios from "axios";
+import DisplayMessage from "./DisplayMessage";
 
 interface PropTypes {
   diaries: NonSensitiveDiaryEntry[];
   setDiaries: React.Dispatch<React.SetStateAction<NonSensitiveDiaryEntry[]>>;
+  setNotifyMessage: React.Dispatch<React.SetStateAction<NotifyMessage>>;
 }
 
-const NewEnty = ({ diaries, setDiaries }: PropTypes) => {
+const NewEnty = ({ diaries, setDiaries, setNotifyMessage }: PropTypes) => {
   const [date, setDate] = useState<string>("");
   const [visibility, setVisibility] = useState<Visibility>();
   const [weather, setWeather] = useState<Weather>();
@@ -36,15 +40,22 @@ const NewEnty = ({ diaries, setDiaries }: PropTypes) => {
         setVisibility(undefined);
         setWeather(undefined);
         setComment("");
-      } catch (exeption) {
-        /*DisplayMessage(setNotifyMessage, {
-          message: exeption.response.data.error,
-          messageType: "error",
-        });
-        */
+      } catch (error) {
+        console.log(error);
+        if (axios.isAxiosError(error)) {
+          const notifyMessage = {
+            message: error.response?.data,
+            messageType: "error",
+            length: 5000,
+          };
+          DisplayMessage({ notifyMessage, setNotifyMessage });
+        } else {
+          console.error(error);
+        }
       }
     }
   };
+
   return (
     <div>
       <h2>Add new entry</h2>
