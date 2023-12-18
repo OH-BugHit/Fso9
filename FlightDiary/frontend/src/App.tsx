@@ -4,7 +4,6 @@ import NewEnty from "./components/NewEntry";
 import { useEffect, useState } from "react";
 import { NonSensitiveDiaryEntry, NotifyMessage } from "./types";
 import { getAllDiaries } from "./services/diarySevice";
-import Notification from "./components/Notification";
 
 const App = () => {
   const [diaries, setDiaries] = useState<NonSensitiveDiaryEntry[]>([]);
@@ -23,10 +22,10 @@ const App = () => {
   return (
     <div>
       <Header name="Olli's Flight Diary" />
-      <Notification message={notifyMessage} />
       <NewEnty
         diaries={diaries}
         setDiaries={setDiaries}
+        notifyMessage={notifyMessage}
         setNotifyMessage={setNotifyMessage}
       />
       <Entries entries={diaries} />

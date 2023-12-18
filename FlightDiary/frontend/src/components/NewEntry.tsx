@@ -9,14 +9,21 @@ import {
 } from "../types";
 import axios from "axios";
 import DisplayMessage from "./DisplayMessage";
+import Notification from "./Notification";
 
 interface PropTypes {
   diaries: NonSensitiveDiaryEntry[];
   setDiaries: React.Dispatch<React.SetStateAction<NonSensitiveDiaryEntry[]>>;
+  notifyMessage: NotifyMessage;
   setNotifyMessage: React.Dispatch<React.SetStateAction<NotifyMessage>>;
 }
 
-const NewEnty = ({ diaries, setDiaries, setNotifyMessage }: PropTypes) => {
+const NewEnty = ({
+  diaries,
+  setDiaries,
+  notifyMessage,
+  setNotifyMessage,
+}: PropTypes) => {
   const [date, setDate] = useState<string>("");
   const [visibility, setVisibility] = useState<Visibility>();
   const [weather, setWeather] = useState<Weather>();
@@ -59,6 +66,7 @@ const NewEnty = ({ diaries, setDiaries, setNotifyMessage }: PropTypes) => {
   return (
     <div>
       <h2>Add new entry</h2>
+      <Notification message={notifyMessage} />
       <form onSubmit={handleSubmit}>
         <div>
           date
