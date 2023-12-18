@@ -23,6 +23,11 @@ h3 {
   margin-bottom: 2%;
 }
 
+input {
+  margin-block: 2%;
+  border-left-color: aqua;
+}
+
 .success {
   margin-top: 10px;
   color: green;

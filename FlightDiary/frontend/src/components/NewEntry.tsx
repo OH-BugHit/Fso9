@@ -68,51 +68,107 @@ const NewEnty = ({
       <h2>Add new entry</h2>
       <Notification message={notifyMessage} />
       <form onSubmit={handleSubmit}>
-        <div>
-          date
-          <input
-            type="text"
-            value={date}
-            name="date"
-            onChange={({ target }) => setDate(target.value)}
-            placeholder="YYYY-MM-DD"
-          />
-        </div>
-        <div>
-          visibility
-          <input
-            type="text"
-            value={visibility}
-            name="visibility"
-            onChange={({ target }) => setVisibility(target.value as Visibility)}
-            placeholder="great | good | ok | poor"
-          />
-        </div>
-        <div>
-          weather
-          <input
-            type="text"
-            value={weather}
-            name="weather"
-            onChange={({ target }) => setWeather(target.value as Weather)}
-            placeholder="sunny | rainy | clody | stormy | windy"
-          />
-        </div>
-        <div>
-          comment
-          <input
-            type="text"
-            value={comment}
-            name="commet"
-            onChange={({ target }) => setComment(target.value)}
-            placeholder="comment on flight"
-          />
-        </div>
-        <div>
-          <button className="addButton" type="submit">
-            add
-          </button>
-        </div>
+        <table>
+          <tbody>
+            <tr>
+              <td>Date</td>
+              <td>
+                <input
+                  type="date"
+                  id="start"
+                  name="date"
+                  value={date}
+                  min="2023-01-01"
+                  max="2024-12-31"
+                  onChange={({ target }) => setDate(target.value)}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>Visibility</td>
+              <td className="radioB">
+                great
+                <input
+                  type="radio"
+                  name="visibilityFilter"
+                  onChange={() => setVisibility("great" as Visibility)}
+                />
+                good
+                <input
+                  type="radio"
+                  name="visibilityFilter"
+                  onChange={() => setVisibility("good" as Visibility)}
+                />
+                ok
+                <input
+                  type="radio"
+                  name="visibilityFilter"
+                  onChange={() => setVisibility("ok" as Visibility)}
+                />
+                poor
+                <input
+                  type="radio"
+                  name="visibilityFilter"
+                  onChange={() => setVisibility("poor" as Visibility)}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>Weather</td>
+              <td className="radioB">
+                sunny
+                <input
+                  type="radio"
+                  name="weatherFilter"
+                  onChange={() => setWeather("sunny" as Weather)}
+                />
+                rainy
+                <input
+                  type="radio"
+                  name="weatherFilter"
+                  onChange={() => setWeather("rainy" as Weather)}
+                />
+                cloudy
+                <input
+                  type="radio"
+                  name="weatherFilter"
+                  onChange={() => setWeather("cloudy" as Weather)}
+                />
+                stormy
+                <input
+                  type="radio"
+                  name="weatherFilter"
+                  onChange={() => setWeather("stormy" as Weather)}
+                />
+                windy
+                <input
+                  type="radio"
+                  name="weatherFilter"
+                  onChange={() => setWeather("windy" as Weather)}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>Comment</td>
+              <td>
+                <input
+                  type="text"
+                  value={comment}
+                  name="commet"
+                  onChange={({ target }) => setComment(target.value)}
+                  placeholder="comment on flight"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <button className="addButton" type="submit">
+                  add
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </form>
     </div>
   );
