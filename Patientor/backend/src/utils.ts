@@ -19,6 +19,7 @@ export const toNewPatient = (object: unknown): NewPatientEntry => {
       ssn: parseString("ssn", object.ssn),
       gender: parseGender(object.gender),
       occupation: parseString("occupation", object.occupation),
+      entries: [],
     };
     return newPatient;
   }
