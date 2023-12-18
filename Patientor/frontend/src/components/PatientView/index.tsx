@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import patients from "../../services/patients";
-import { Gender, Patient } from "../../types";
+import { Gender, Patient, Entry } from "../../types";
+import EntryRender from "./EntryRender";
 
 /**
  * Näyttää aluksi asiakkaan tiedot, jotka jo löytyvät. Hakee heti myös "tietokannasta" ajatasaisen tiedon ja päivittää kun haettu.
@@ -14,6 +15,7 @@ const PatientView = ({ patient }: { patient: Patient | undefined }) => {
     patient?.occupation
   );
   const [gender, setGender] = useState<Gender | undefined>(patient?.gender);
+  const [entries, setEntries] = useState<Entry[] | null>(null);
 
   useEffect(() => {
     async function getSsn() {
@@ -24,6 +26,7 @@ const PatientView = ({ patient }: { patient: Patient | undefined }) => {
           setName(patientData.name);
           setOccupation(patient.occupation);
           setGender(patientData.gender);
+          setEntries(patientData.entries);
         }
       }
     }
@@ -53,9 +56,21 @@ const PatientView = ({ patient }: { patient: Patient | undefined }) => {
         <h2>{`${name} ${genderSymbol()}`}</h2>
         <p>ssn: {ssn}</p>
         <p>occupation: {occupation}</p>
+        <h3>entries</h3>
+        <p>
+          {entries?.map((entry: Entry) => (
+            <EntryRender entry={entry} />
+          ))}
+        </p>
       </div>
     );
   }
 };
 
 export default PatientView;
+
+/*
+{props.map((course: CoursePart) => (
+        <Part props={course} />
+      ))}
+      */

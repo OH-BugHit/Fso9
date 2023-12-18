@@ -59,7 +59,7 @@ export enum HealthCheckRating {
   "CriticalRisk" = 3,
 }
 
-export interface HealthCheck {
+export interface HealthCheck extends BaseEntry {
   healthCheckRating: HealthCheckRating;
 }
 
