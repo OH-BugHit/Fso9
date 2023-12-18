@@ -61,12 +61,3 @@ const isGender = (param: string): param is Gender => {
     .map((v) => v.toString())
     .includes(param);
 };
-
-/*
-  id: string;
-  name: string;
-  dateOfBirth: Date;
-  ssn: string;
-  gender: string;
-  occupation: string;
-  */
