@@ -33,11 +33,13 @@ export interface BaseEntry {
   specialist: string;
   diagnosisCodes?: Array<Diagnosis["code"]>;
   description: string;
-  type: Type;
+  type: string;
 }
 
-export interface Type {
-  type: string;
+export enum EntryType {
+  Hospital = "Hospital",
+  HealthCheck = "HeathCheck",
+  OccupationalHealthcare = "OccupationalHealthcare",
 }
 
 export interface OccupationalHealthcareEntry extends BaseEntry {

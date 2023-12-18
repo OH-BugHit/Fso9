@@ -37,40 +37,36 @@ const PatientView = ({ patient }: { patient: Patient | undefined }) => {
   if (patient === undefined) {
     return null;
   } else {
-    const genderSymbol = () => {
+    const genderSymbol = (gender: string | undefined) => {
       switch (gender) {
-        case Gender.Male: {
+        case "Male": {
           return "♂";
         }
-        case Gender.Female: {
+        case "Female": {
           return "♀";
         }
-        case Gender.Other: {
+        case "Other": {
           return "⚤";
         }
+        default:
+          return null;
       }
     };
 
     return (
       <div>
-        <h2>{`${name} ${genderSymbol()}`}</h2>
+        <h2>{`${name} ${genderSymbol(gender)}`}</h2>
         <p>ssn: {ssn}</p>
         <p>occupation: {occupation}</p>
         <h3>entries</h3>
-        <p>
+        <div>
           {entries?.map((entry: Entry) => (
-            <EntryRender entry={entry} />
+            <EntryRender key={entry.id} entry={entry} />
           ))}
-        </p>
+        </div>
       </div>
     );
   }
 };
 
 export default PatientView;
-
-/*
-{props.map((course: CoursePart) => (
-        <Part props={course} />
-      ))}
-      */

@@ -20,6 +20,12 @@ export enum Gender {
   Other = "Other",
 }
 
+export enum EntryType {
+  Hospital = "Hospital",
+  HealthCheck = "HeathCheck",
+  OccupationalHealthcare = "OccupationalHealthcare",
+}
+
 export interface SickLeave {
   startDate: string;
   endDate: string;
@@ -31,10 +37,6 @@ export interface BaseEntry {
   specialist: string;
   diagnosisCodes?: Array<Diagnosis["code"]>;
   description: string;
-  type: Type;
-}
-
-export interface Type {
   type: string;
 }
 
