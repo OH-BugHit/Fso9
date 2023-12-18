@@ -1,30 +1,35 @@
+import { useEffect, useState } from "react";
 import { Diagnosis, Entry } from "../../types";
-
-const codes = ({ entry }: { entry: Entry }) => {
-  if (entry.diagnosisCodes) {
-    return (
-      <div>
-        {entry.diagnosisCodes.map((code: Diagnosis["code"]) => (
-          <li key={code}>{code}</li>
-        ))}
-      </div>
-    );
-  }
-  return <p></p>;
-};
+import patients from "../../services/patients";
+import { codes } from "./utils";
 
 const EntryRender = ({ entry }: { entry: Entry }) => {
+  const [codebase, setCodebase] = useState<Diagnosis[] | undefined>(undefined); //codebase on siis diagnostiikkakoodiolio joka sisältää myös eng ja latin tekstit
+  useEffect(() => {
+    //se haetaan backendistä useEffectillä
+    async function getDiagnoses() {
+      const codes: Diagnosis[] = await patients.getDiagnoses();
+      if (codes) {
+        setCodebase(codes); // Ja asetellaan normaalisti useStateen
+      }
+    }
+    if (codebase === undefined) {
+      getDiagnoses(); // Ja koska async niin näin eikä suoraan
+    }
+  }, [codebase]);
+
   if (entry) {
     const base = () => {
+      //Pohja kaikkiin renderöinteihin
       return (
         <div>
           <p>{`${entry.date} ${entry.description}`}</p>
 
-          <ul>{codes({ entry })}</ul>
+          <ul>{codes({ entry, codebase })}</ul>
         </div>
       );
     };
-
+    // Erityyppisten entryjen näyttämiseen eri palautukset
     switch (entry.type) {
       case "Hospital":
         return <div>{base()}</div>;
@@ -40,10 +45,3 @@ const EntryRender = ({ entry }: { entry: Entry }) => {
 };
 
 export default EntryRender;
-
-/*
-
-{entries?.map((entry: Entry) => (
-            <EntryRender key={entry.id} entry={entry} />
-          ))}
-          */

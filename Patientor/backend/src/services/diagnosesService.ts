@@ -1,7 +1,7 @@
 import diagnosesData from "../../data/diagnoses"; // haetaan json-data
 import { Diagnosis } from "../types";
 
-const getEntries = (): Diagnosis[] => {
+const getDiagnosisData = (): Diagnosis[] => {
   return diagnosesData;
 };
 
@@ -10,6 +10,6 @@ const addDiagnoses = () => {
 };
 
 export default {
-  getEntries,
+  getEntries: getDiagnosisData,
   addDiagnoses,
 };

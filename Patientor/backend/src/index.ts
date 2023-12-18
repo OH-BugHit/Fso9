@@ -8,10 +8,8 @@ import morgan from "morgan";
 const app = express();
 app.use(express.json());
 app.use(
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   morgan(":method :url :status :res[content-length] - :response-time ms")
 );
-// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 app.use(cors());
 
 const PORT = 3001;
