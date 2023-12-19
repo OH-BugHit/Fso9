@@ -65,7 +65,7 @@ const PatientView = ({ patient }: { patient: Patient | undefined }) => {
         <h2>{`${name} ${genderSymbol(gender)}`}</h2>
         <p>ssn: {ssn}</p>
         <p>occupation: {occupation}</p>
-        <AddNewEntry show={addForm}></AddNewEntry>
+        <AddNewEntry show={addForm} setVisible={setAddForm}></AddNewEntry>
         <h3>entries</h3>
         <div>
           {entries?.map((entry: Entry) => (
