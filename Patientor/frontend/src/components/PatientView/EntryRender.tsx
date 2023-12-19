@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
-import { Diagnosis, Entry } from "../../types";
+import {
+  Diagnosis,
+  Entry,
+  HealthCheckEntry,
+  HospitalEntry,
+  OccupationalHealthcareEntry,
+} from "../../types";
 import patients from "../../services/patients";
-import { codes } from "./utils";
+import hospitalEntry from "./TypeRenders/HospitalEntry";
+import occupationalEntry from "./TypeRenders/OccupationalEntry";
+import healthCheckEntry from "./TypeRenders/HealthCheckEntry";
 
 const EntryRender = ({ entry }: { entry: Entry }) => {
   const [codebase, setCodebase] = useState<Diagnosis[] | undefined>(undefined); //codebase on siis diagnostiikkakoodiolio joka sisältää myös eng ja latin tekstit
@@ -18,25 +26,29 @@ const EntryRender = ({ entry }: { entry: Entry }) => {
     }
   }, [codebase]);
 
-  if (entry) {
-    const base = () => {
-      //Pohja kaikkiin renderöinteihin
-      return (
-        <div>
-          <p>{`${entry.date} ${entry.description}`}</p>
-
-          <ul>{codes({ entry, codebase })}</ul>
-        </div>
-      );
-    };
+  if (entry && codebase) {
     // Erityyppisten entryjen näyttämiseen eri palautukset
+    let toRender;
     switch (entry.type) {
       case "Hospital":
-        return <div>{base()}</div>;
+        toRender = entry as HospitalEntry;
+        return (
+          <div className="entry">{hospitalEntry({ toRender, codebase })}</div>
+        );
       case "HealthCheck":
-        return <div>{base()}</div>;
+        toRender = entry as HealthCheckEntry;
+        return (
+          <div className="entry">
+            {healthCheckEntry({ toRender, codebase })}
+          </div>
+        );
       case "OccupationalHealthcare":
-        return <div>{base()}</div>;
+        toRender = entry as OccupationalHealthcareEntry;
+        return (
+          <div className="entry">
+            {occupationalEntry({ toRender, codebase })}
+          </div>
+        );
     }
     return <p>{entry.date}</p>;
   } else {
