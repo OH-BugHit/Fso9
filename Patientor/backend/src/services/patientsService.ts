@@ -1,5 +1,10 @@
 import patientsData from "../../data/patients"; // haetaan json-data
-import { NewPatientEntry, NonSensitivePatientEntry, Patient } from "../types";
+import {
+  NewEntry,
+  NewPatientEntry,
+  NonSensitivePatientEntry,
+  Patient,
+} from "../types";
 import { v1 as uuid } from "uuid";
 const getEntries = (): Patient[] => {
   return patientsData;
@@ -29,9 +34,28 @@ const addPatient = (body: NewPatientEntry) => {
   return newPatientEntry;
 };
 
+const addEntry = (body: NewEntry, person: string) => {
+  const newEntry = {
+    id: uuid(),
+    ...body,
+  };
+  const oldEntry = findById(person);
+  if (oldEntry) {
+    oldEntry.entries.push(newEntry);
+    //patientsData.filter() tässä vois olla vielä vikaa, jos on niin tee paikallinen versio jsonista ja filtteröi tässä vaiheessa toi oldEntryÄijä pois ja lisää se uuden entryn kanssa sitten
+    patientsData.push(oldEntry);
+    return newEntry;
+  } else {
+    throw new Error(
+      `Incorrect or missing id! Could not find patient with id: ${person} in database`
+    );
+  }
+};
+
 export default {
   getEntries,
   getNonSensitiveEntries,
   addPatient,
   findById,
+  addEntry,
 };
