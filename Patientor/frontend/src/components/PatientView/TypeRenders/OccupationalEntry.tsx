@@ -54,7 +54,7 @@ const occupationalEntry = ({
       </h4>
       <p className="description">{toRender.description}</p>
       <ul>{codes({ toRender, codebase })}</ul>
-      <p>{sickLeave(toRender.sickLeave)}</p>
+      <div>{sickLeave(toRender.sickLeave)}</div>
       <p>diagnose by {toRender.specialist}</p>
     </div>
   );

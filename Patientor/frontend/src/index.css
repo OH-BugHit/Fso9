@@ -9,3 +9,7 @@
   font-style: italic;
   font-weight: 100;
 }
+
+p {
+  margin: auto;
+}

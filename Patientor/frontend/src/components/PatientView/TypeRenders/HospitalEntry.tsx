@@ -20,7 +20,6 @@ const discharge = (toRender: Discharge | undefined) => {
 };
 
 const hospitalEntry = ({ toRender, codebase }: HospitalProps) => {
-  //Pohja kaikkiin renderöinteihin
   return (
     <div>
       <h4>
