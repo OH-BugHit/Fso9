@@ -8,9 +8,9 @@ import {
   NewEntry,
   SickLeave,
   Entry,
-} from "../../types";
+} from "../../../types";
 import { submitNewEntry } from "./utils";
-import { Error, ErrorOutline } from "@mui/icons-material";
+import { ErrorOutline } from "@mui/icons-material";
 
 const ErrorField = ({ error }: { error: string }) => {
   if (error === "") return null;

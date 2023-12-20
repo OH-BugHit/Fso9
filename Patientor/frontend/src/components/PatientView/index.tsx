@@ -3,7 +3,7 @@ import patients from "../../services/patients";
 import { Gender, Patient, Entry } from "../../types";
 import EntryRender from "./EntryRender";
 import { Button } from "@mui/material";
-import AddNewEntry from "./AddNewEntry";
+import AddNewEntry from "./AddEntry/AddNewEntry";
 
 /**
  * Näyttää aluksi asiakkaan tiedot, jotka jo löytyvät. Hakee heti myös "tietokannasta" ajatasaisen tiedon ja päivittää kun haettu.
