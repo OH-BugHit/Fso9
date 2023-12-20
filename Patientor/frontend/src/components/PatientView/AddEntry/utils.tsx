@@ -1,6 +1,7 @@
 import axios from "axios";
 import { NewEntry, Entry } from "../../../types";
 import entryService from "../../../services/entries";
+import { ErrorOutline } from "@mui/icons-material";
 
 interface submitProps {
   entry: NewEntry;
@@ -11,6 +12,7 @@ interface submitProps {
   setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const submitNewEntry = async ({
   entry,
   entries,
@@ -41,4 +43,14 @@ export const submitNewEntry = async ({
       console.error("Unknown error", e);
     }
   }
+};
+
+export const ErrorField = ({ error }: { error: string }) => {
+  if (error === "") return null;
+  return (
+    <p className="error">
+      <ErrorOutline sx={{ marginRight: "8px" }}></ErrorOutline>
+      {error}
+    </p>
+  );
 };

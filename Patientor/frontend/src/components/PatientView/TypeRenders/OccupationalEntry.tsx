@@ -25,7 +25,7 @@ const dayCalculator = (date1: string, date2: string): number => {
 };
 
 const sickLeave = (toRender: SickLeave | undefined) => {
-  if (toRender) {
+  if (toRender?.startDate) {
     const days = dayCalculator(toRender.startDate, toRender.endDate);
     return (
       <div>

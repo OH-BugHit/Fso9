@@ -2,14 +2,24 @@ import { Button, TextField } from "@mui/material";
 import { SyntheticEvent, useState } from "react";
 import {
   Diagnosis,
-  EntryType,
   NewEntry,
   Visibility,
   newEntryProps,
 } from "../../../../types";
-import { ErrorField, submitNewEntry } from "../utils";
+import { submitNewEntry } from "../utils";
+import { ErrorOutline } from "@mui/icons-material";
 
-const AddNewHospitalEntry = ({
+const ErrorField = ({ error }: { error: string }) => {
+  if (error === "") return null;
+  return (
+    <p className="error">
+      <ErrorOutline sx={{ marginRight: "8px" }}></ErrorOutline>
+      {error}
+    </p>
+  );
+};
+
+const AddNewOccupationalEntry = ({
   show,
   setVisible,
   entries,
@@ -22,10 +32,10 @@ const AddNewHospitalEntry = ({
   const [specialist, setSpecialist] = useState<string>("");
   const [diagnosisCodes, setDiagnosisCodes] = useState<Diagnosis["code"][]>([]);
   const [description, setDescription] = useState<string>("");
-  const [type, setType] = useState<EntryType | undefined>(undefined);
-  const [dischargeDate, setDischargeDate] = useState<Date | string>(new Date());
-  const [criteria, setCriteria] = useState<string>("");
-  const [showDischarge, setShowDischarge] = useState<boolean>(false);
+  const [startDate, setStartDate] = useState<Date | string>(new Date());
+  const [endDate, setEndDate] = useState<Date | string>(new Date());
+  const [employerName, setEmployerName] = useState<string>("");
+  const [isSickLeave, setIsSickLeave] = useState<boolean>(false);
 
   const onCancel = () => {
     setButtonVis(Visibility.visible);
@@ -36,30 +46,28 @@ const AddNewHospitalEntry = ({
     event.preventDefault();
     setButtonVis(Visibility.visible);
     let entry: NewEntry;
-    switch (type) {
-      default: {
-        if (showDischarge) {
-          entry = {
-            date: parseDate(date),
-            specialist: specialist,
-            description: description,
-            type: "Hospital",
-            diagnosisCodes: diagnosisCodes,
-            discharge: {
-              date: parseDate(dischargeDate),
-              criteria: criteria,
-            },
-          };
-        } else {
-          entry = {
-            date: parseDate(date),
-            specialist: specialist,
-            description: description,
-            type: "Hospital",
-            diagnosisCodes: diagnosisCodes,
-          };
-        }
-      }
+    if (isSickLeave) {
+      entry = {
+        date: parseDate(date),
+        specialist: specialist,
+        description: description,
+        type: "OccupationalHealthcare",
+        diagnosisCodes: diagnosisCodes,
+        employerName: employerName,
+        sickLeave: {
+          startDate: parseDate(startDate),
+          endDate: parseDate(endDate),
+        },
+      };
+    } else {
+      entry = {
+        date: parseDate(date),
+        specialist: specialist,
+        description: description,
+        type: "OccupationalHealthcare",
+        diagnosisCodes: diagnosisCodes,
+        employerName: employerName,
+      };
     }
 
     setError("");
@@ -76,9 +84,9 @@ const AddNewHospitalEntry = ({
     setSpecialist("");
     setDiagnosisCodes([]);
     setDescription("");
-    setType(undefined);
-    setDischargeDate(new Date());
-    setCriteria("");
+    setStartDate(new Date());
+    setEndDate(new Date());
+    setEmployerName("");
   };
 
   const parseDiagnosis = (data: string) => {
@@ -102,8 +110,8 @@ const AddNewHospitalEntry = ({
     return parsedDate; // Ei nättiä mutta toimii...
   };
 
-  const DischargeButton = () => {
-    if (!showDischarge) {
+  const SickLeaveButton = () => {
+    if (!isSickLeave) {
       return (
         <Button
           color="primary"
@@ -111,12 +119,13 @@ const AddNewHospitalEntry = ({
           type="button"
           onClick={useThis}
           sx={{
+            float: "right",
             marginBottom: "16px",
             marginTop: "6px",
             minWidth: "fit-content",
           }}
         >
-          Discharge
+          Sick leave
         </Button>
       );
     } else {
@@ -127,19 +136,20 @@ const AddNewHospitalEntry = ({
           type="button"
           onClick={useThis}
           sx={{
+            float: "right",
             marginBottom: "16px",
             marginTop: "6px",
             minWidth: "fit-content",
           }}
         >
-          Cancel Discharge
+          Cancel sick leave
         </Button>
       );
     }
   };
 
   const useThis = () => {
-    setShowDischarge(!showDischarge);
+    setIsSickLeave(!isSickLeave);
   };
 
   if (show)
@@ -159,6 +169,14 @@ const AddNewHospitalEntry = ({
                 shrink: true,
               }}
               onChange={({ target }) => setDate(target.value)}
+            />
+            <TextField
+              sx={{ paddingTop: "8px", paddingBottom: "8px" }}
+              label="Employer name (required field)"
+              type="text"
+              fullWidth
+              value={employerName}
+              onChange={({ target }) => setEmployerName(target.value)}
             />
             <TextField
               sx={{ paddingTop: "8px", paddingBottom: "8px" }}
@@ -187,36 +205,38 @@ const AddNewHospitalEntry = ({
             />
             <div style={{ display: "flex", gap: "8px" }}>
               <TextField
-                disabled={!showDischarge}
+                disabled={!isSickLeave}
                 sx={{
                   paddingTop: "8px",
                   paddingBottom: "8px",
                   minWidth: "auto",
                 }}
                 type="date"
-                id="date"
-                label="Discharge"
-                defaultValue={parseDate(dischargeDate)}
+                id="sickStartDate"
+                label="First day of sick leave"
+                defaultValue={parseDate(startDate)}
                 InputLabelProps={{
                   shrink: true,
                 }}
-                onChange={({ target }) => setDischargeDate(target.value)}
+                onChange={({ target }) => setStartDate(target.value)}
               />
               <TextField
-                disabled={!showDischarge}
+                disabled={!isSickLeave}
                 sx={{
                   paddingTop: "8px",
                   paddingBottom: "8px",
+                  minWidth: "auto",
                 }}
-                fullWidth
-                type="text"
-                id="criteria"
-                label="Criteria"
-                placeholder="criteria for discharge"
-                value={criteria}
-                onChange={({ target }) => setCriteria(target.value)}
+                type="date"
+                id="sickEndDate"
+                label="Last day of sick leave"
+                defaultValue={parseDate(startDate)}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                onChange={({ target }) => setEndDate(target.value)}
               />
-              <DischargeButton />
+              <SickLeaveButton />
             </div>
             <Button
               color="error"
@@ -242,4 +262,4 @@ const AddNewHospitalEntry = ({
   else return null;
 };
 
-export default AddNewHospitalEntry;
+export default AddNewOccupationalEntry;

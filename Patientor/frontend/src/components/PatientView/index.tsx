@@ -4,6 +4,7 @@ import { Gender, Patient, Entry } from "../../types";
 import EntryRender from "./EntryRender";
 import { Button } from "@mui/material";
 import AddNewEntry from "./AddEntry/AddNewEntry";
+import { scrollToTop } from "./utils";
 
 /**
  * Näyttää aluksi asiakkaan tiedot, jotka jo löytyvät. Hakee heti myös "tietokannasta" ajatasaisen tiedon ja päivittää kun haettu.
@@ -57,6 +58,7 @@ const PatientView = ({ patient }: { patient: Patient | undefined }) => {
     };
 
     const showForm = () => {
+      scrollToTop();
       setAddForm(true);
     };
 

@@ -43,6 +43,12 @@ export enum EntryType {
   OccupationalHealthcare = "OccupationalHealthcare",
 }
 
+export const enum Visibility {
+  visible = "visible",
+  hidden = "hidden",
+  collapse = "collapse",
+}
+
 export interface OccupationalHealthcareEntry extends BaseEntry {
   employerName: string;
   sickLeave?: SickLeave;
@@ -69,6 +75,15 @@ export interface HealthCheckEntry extends BaseEntry {
 }
 
 // Entries
+export interface newEntryProps {
+  show: boolean;
+  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  entries: Entry[] | null;
+  setEntries: React.Dispatch<React.SetStateAction<Entry[] | null>>;
+  patientID: string;
+  setButtonVis: React.Dispatch<React.SetStateAction<Visibility>>;
+}
+
 export type Entry =
   | HealthCheckEntry
   | HospitalEntry

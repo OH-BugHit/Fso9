@@ -33,6 +33,13 @@ export const codes = ({ toRender, codebase }: codeProps) => {
   return <p></p>;
 };
 
+export const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+};
+
 export const showHealthCheckIcon = (rating: HealthCheckRating) => {
   switch (rating) {
     case HealthCheckRating.Healthy:
