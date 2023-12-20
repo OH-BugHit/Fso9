@@ -3,7 +3,6 @@ import { Button, TextField } from "@mui/material";
 import React, { SyntheticEvent, useState } from "react";
 import {
   Diagnosis,
-  Discharge,
   EntryType,
   HealthCheckRating,
   NewEntry,
@@ -11,6 +10,17 @@ import {
   Entry,
 } from "../../types";
 import { submitNewEntry } from "./utils";
+import { Error, ErrorOutline } from "@mui/icons-material";
+
+const ErrorField = ({ error }: { error: string }) => {
+  if (error === "") return null;
+  return (
+    <p className="error">
+      <ErrorOutline sx={{ marginRight: "8px" }}></ErrorOutline>
+      {error}
+    </p>
+  );
+};
 
 interface newEntryProps {
   show: boolean;
@@ -27,12 +37,12 @@ const AddNewEntry = ({
   setEntries,
   patientID,
 }: newEntryProps) => {
+  const [error, setError] = useState<string>("");
   const [date, setDate] = useState<string | Date>(new Date());
   const [specialist, setSpecialist] = useState<string>("");
   const [diagnosisCodes, setDiagnosisCodes] = useState<Diagnosis["code"][]>([]);
   const [description, setDescription] = useState<string>("");
   const [type, setType] = useState<EntryType | undefined>(undefined);
-  const [discharge, setDischarge] = useState<Discharge | undefined>(undefined);
   const [heathCheckRating, setHeathCheckRating] = useState<
     HealthCheckRating | undefined
   >(undefined);
@@ -75,7 +85,16 @@ const AddNewEntry = ({
         }
       }
     }
-    submitNewEntry({ entry, entries, setEntries, setVisible, patientID });
+
+    setError("");
+    submitNewEntry({
+      entry,
+      entries,
+      setEntries,
+      setVisible,
+      patientID,
+      setError,
+    });
     // Nollaillaan kaikki
     setDate(new Date());
     setSpecialist("");
@@ -85,7 +104,6 @@ const AddNewEntry = ({
     setHeathCheckRating(undefined);
     setEmployerName("");
     setSickLeave(undefined);
-    setDischarge(undefined);
     setDischargeDate(new Date());
     setCriteria("");
     setCheckDischarge(false);
@@ -112,7 +130,7 @@ const AddNewEntry = ({
     return parsedDate; // Ei nättiä mutta toimii...
   };
 
-  const DisButton = () => {
+  const DischargeButton = () => {
     if (!showDischarge) {
       return (
         <Button
@@ -142,7 +160,7 @@ const AddNewEntry = ({
             minWidth: "fit-content",
           }}
         >
-          Keep in
+          Cancel Discharge
         </Button>
       );
     }
@@ -154,92 +172,99 @@ const AddNewEntry = ({
 
   if (show)
     return (
-      <div className="addEntryForm">
-        <form onSubmit={addPatient}>
-          <TextField
-            sx={{ paddingTop: "8px", paddingBottom: "8px" }}
-            type="date"
-            fullWidth
-            id="date"
-            label="Date (required field)"
-            defaultValue={parseDate(date)}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            onChange={({ target }) => setDate(target.value)}
-          />
-          <TextField
-            sx={{ paddingTop: "8px", paddingBottom: "8px" }}
-            label="Description (required field)"
-            placeholder="description of entry"
-            type="text"
-            fullWidth
-            value={description}
-            onChange={({ target }) => setDescription(target.value)}
-          />
-          <TextField
-            sx={{ paddingTop: "8px", paddingBottom: "8px" }}
-            label="Specialist (required field)"
-            placeholder="MD..."
-            fullWidth
-            value={specialist}
-            onChange={({ target }) => setSpecialist(target.value)}
-          />
-          <TextField
-            sx={{ paddingTop: "8px", paddingBottom: "8px" }}
-            label="Diagnosis codes"
-            placeholder="Z57.1, N30.0"
-            fullWidth
-            value={diagnosisCodes}
-            onChange={({ target }) => parseDiagnosis(target.value)}
-          />
-          <div style={{ display: "flex", gap: "8px" }}>
+      <div>
+        <ErrorField error={error} />
+        <div className="addEntryForm">
+          <form onSubmit={addPatient}>
             <TextField
-              disabled={!showDischarge}
-              sx={{ paddingTop: "8px", paddingBottom: "8px", minWidth: "auto" }}
+              sx={{ paddingTop: "8px", paddingBottom: "8px" }}
               type="date"
+              fullWidth
               id="date"
-              label="Discharge"
-              defaultValue={parseDate(dischargeDate)}
+              label="Date (required field)"
+              defaultValue={parseDate(date)}
               InputLabelProps={{
                 shrink: true,
               }}
-              onChange={({ target }) => setDischargeDate(target.value)}
+              onChange={({ target }) => setDate(target.value)}
             />
             <TextField
-              disabled={!showDischarge}
-              sx={{
-                paddingTop: "8px",
-                paddingBottom: "8px",
-              }}
-              fullWidth
+              sx={{ paddingTop: "8px", paddingBottom: "8px" }}
+              label="Description (required field)"
+              placeholder="description of entry"
               type="text"
-              id="criteria"
-              label="Criteria"
-              placeholder="criteria for discharge"
-              value={criteria}
-              onChange={({ target }) => setCriteria(target.value)}
+              fullWidth
+              value={description}
+              onChange={({ target }) => setDescription(target.value)}
             />
-            <DisButton />
-          </div>
-          <Button
-            color="error"
-            variant="contained"
-            type="button"
-            onClick={onCancel}
-          >
-            Cancel
-          </Button>
-          <Button
-            style={{
-              float: "right",
-            }}
-            type="submit"
-            variant="contained"
-          >
-            Add
-          </Button>
-        </form>
+            <TextField
+              sx={{ paddingTop: "8px", paddingBottom: "8px" }}
+              label="Specialist (required field)"
+              placeholder="MD..."
+              fullWidth
+              value={specialist}
+              onChange={({ target }) => setSpecialist(target.value)}
+            />
+            <TextField
+              sx={{ paddingTop: "8px", paddingBottom: "8px" }}
+              label="Diagnosis codes"
+              placeholder="Z57.1, N30.0"
+              fullWidth
+              value={diagnosisCodes}
+              onChange={({ target }) => parseDiagnosis(target.value)}
+            />
+            <div style={{ display: "flex", gap: "8px" }}>
+              <TextField
+                disabled={!showDischarge}
+                sx={{
+                  paddingTop: "8px",
+                  paddingBottom: "8px",
+                  minWidth: "auto",
+                }}
+                type="date"
+                id="date"
+                label="Discharge"
+                defaultValue={parseDate(dischargeDate)}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                onChange={({ target }) => setDischargeDate(target.value)}
+              />
+              <TextField
+                disabled={!showDischarge}
+                sx={{
+                  paddingTop: "8px",
+                  paddingBottom: "8px",
+                }}
+                fullWidth
+                type="text"
+                id="criteria"
+                label="Criteria"
+                placeholder="criteria for discharge"
+                value={criteria}
+                onChange={({ target }) => setCriteria(target.value)}
+              />
+              <DischargeButton />
+            </div>
+            <Button
+              color="error"
+              variant="contained"
+              type="button"
+              onClick={onCancel}
+            >
+              Cancel
+            </Button>
+            <Button
+              style={{
+                float: "right",
+              }}
+              type="submit"
+              variant="contained"
+            >
+              Add
+            </Button>
+          </form>
+        </div>
       </div>
     );
   else return null;

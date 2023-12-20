@@ -119,7 +119,9 @@ const isHealthCheckRating = (param: number): param is HealthCheckRating => {
 
 const parseString = (key: string, param: unknown): string => {
   if (!isString(param) || param.length === 0) {
-    throw new Error(`Incorrect or missing value ${key} with input ${param}`);
+    throw new Error(
+      `Incorrect or missing value "${key}". Value given: "${param}"`
+    );
   }
   return param;
 };

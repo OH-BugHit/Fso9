@@ -54,6 +54,7 @@ interface submitProps {
   setEntries: React.Dispatch<React.SetStateAction<Entry[] | null>>;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
   patientID: string;
+  setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const submitNewEntry = async ({
@@ -62,6 +63,7 @@ export const submitNewEntry = async ({
   setEntries,
   setVisible,
   patientID,
+  setError,
 }: submitProps) => {
   try {
     const addedEntry = await entryService.create({ entry, patientID });
@@ -78,6 +80,7 @@ export const submitNewEntry = async ({
           "Something went wrong. Error: ",
           ""
         );
+        setError(message);
         console.error(message);
       }
     } else {

@@ -23,3 +23,10 @@ p {
   margin-bottom: 20px;
   padding: 1%;
 }
+
+.error {
+  border-radius: 8px;
+  padding: 10px;
+  color: black;
+  background-color: rgb(247, 208, 208);
+}
