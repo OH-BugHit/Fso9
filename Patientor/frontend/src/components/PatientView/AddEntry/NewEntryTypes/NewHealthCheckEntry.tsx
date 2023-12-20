@@ -2,13 +2,15 @@ import { Button, TextField } from "@mui/material";
 import { SyntheticEvent, useState } from "react";
 import {
   Diagnosis,
+  HealthCheckRating,
   NewEntry,
   Visibility,
   newEntryProps,
 } from "../../../../types";
 import { ErrorField, submitNewEntry } from "../utils";
+import HealthRatingBar from "../../../HealthRatingBar";
 
-const AddNewOccupationalEntry = ({
+const AddNewHealthCheckEntry = ({
   show,
   setVisible,
   entries,
@@ -21,61 +23,67 @@ const AddNewOccupationalEntry = ({
   const [specialist, setSpecialist] = useState<string>("");
   const [diagnosisCodes, setDiagnosisCodes] = useState<Diagnosis["code"][]>([]);
   const [description, setDescription] = useState<string>("");
-  const [startDate, setStartDate] = useState<Date | string>(new Date());
-  const [endDate, setEndDate] = useState<Date | string>(new Date());
-  const [employerName, setEmployerName] = useState<string>("");
-  const [isSickLeave, setIsSickLeave] = useState<boolean>(false);
+  const [heathCheckRating, setHeathCheckRating] =
+    useState<HealthCheckRating | null>(HealthCheckRating.Healthy);
 
   const onCancel = () => {
     setButtonVis(Visibility.visible);
     setVisible(false);
   };
 
+  // Itse ehkä olisin numeroinut alunperin eritavalla nämä, mutta "tietokannassa" jo näin niin tehdään tällainen käännös
+  const invertHealth = (num: HealthCheckRating): HealthCheckRating => {
+    const oikeaNum = (num as number) - 1;
+    switch (oikeaNum as HealthCheckRating) {
+      case HealthCheckRating.Healthy:
+        return HealthCheckRating.CriticalRisk;
+      case HealthCheckRating.LowRisk:
+        return HealthCheckRating.HighRisk;
+      case HealthCheckRating.HighRisk:
+        return HealthCheckRating.LowRisk;
+      case HealthCheckRating.CriticalRisk:
+        return HealthCheckRating.Healthy;
+    }
+  };
+
   const addEntry = (event: SyntheticEvent) => {
     event.preventDefault();
-    setButtonVis(Visibility.visible);
-    let entry: NewEntry;
-    if (isSickLeave) {
-      entry = {
-        date: parseDate(date),
-        specialist: specialist,
-        description: description,
-        type: "OccupationalHealthcare",
-        diagnosisCodes: diagnosisCodes,
-        employerName: employerName,
-        sickLeave: {
-          startDate: parseDate(startDate),
-          endDate: parseDate(endDate),
-        },
-      };
-    } else {
-      entry = {
-        date: parseDate(date),
-        specialist: specialist,
-        description: description,
-        type: "OccupationalHealthcare",
-        diagnosisCodes: diagnosisCodes,
-        employerName: employerName,
-      };
-    }
+    if (heathCheckRating) {
+      const saveHealthRate = invertHealth(heathCheckRating);
+      console.log(saveHealthRate);
 
-    setError("");
-    submitNewEntry({
-      entry,
-      entries,
-      setEntries,
-      setVisible,
-      patientID,
-      setError,
-    });
-    // Nollaillaan kaikki
-    setDate(new Date());
-    setSpecialist("");
-    setDiagnosisCodes([]);
-    setDescription("");
-    setStartDate(new Date());
-    setEndDate(new Date());
-    setEmployerName("");
+      const entry: NewEntry = {
+        date: parseDate(date),
+        specialist: specialist,
+        description: description,
+        type: "HealthCheck",
+        diagnosisCodes: diagnosisCodes,
+        healthCheckRating: saveHealthRate,
+      };
+
+      setError("");
+      submitNewEntry({
+        entry,
+        entries,
+        setEntries,
+        setVisible,
+        patientID,
+        setError,
+      });
+      if (error === "") {
+        setButtonVis(Visibility.visible);
+      }
+      // Nollaillaan kaikki
+      setDate(new Date());
+      setSpecialist("");
+      setDiagnosisCodes([]);
+      setDescription("");
+      setHeathCheckRating(null);
+    } else {
+      setError(
+        "Missing health check rating! Please provide it by clicking suitable start/heart"
+      );
+    }
   };
 
   const parseDiagnosis = (data: string) => {
@@ -99,46 +107,11 @@ const AddNewOccupationalEntry = ({
     return parsedDate; // Ei nättiä mutta toimii...
   };
 
-  const SickLeaveButton = () => {
-    if (!isSickLeave) {
-      return (
-        <Button
-          color="primary"
-          variant="contained"
-          type="button"
-          onClick={useThis}
-          sx={{
-            float: "right",
-            marginBottom: "16px",
-            marginTop: "6px",
-            minWidth: "fit-content",
-          }}
-        >
-          Sick leave
-        </Button>
-      );
-    } else {
-      return (
-        <Button
-          color="error"
-          variant="contained"
-          type="button"
-          onClick={useThis}
-          sx={{
-            float: "right",
-            marginBottom: "16px",
-            marginTop: "6px",
-            minWidth: "fit-content",
-          }}
-        >
-          Cancel sick leave
-        </Button>
-      );
-    }
-  };
-
-  const useThis = () => {
-    setIsSickLeave(!isSickLeave);
+  const handleHealthRatingBar = (
+    _event: SyntheticEvent,
+    newValue: number | null
+  ) => {
+    setHeathCheckRating(newValue as HealthCheckRating);
   };
 
   if (show)
@@ -158,14 +131,6 @@ const AddNewOccupationalEntry = ({
                 shrink: true,
               }}
               onChange={({ target }) => setDate(target.value)}
-            />
-            <TextField
-              sx={{ paddingTop: "8px", paddingBottom: "8px" }}
-              label="Employer name (required field)"
-              type="text"
-              fullWidth
-              value={employerName}
-              onChange={({ target }) => setEmployerName(target.value)}
             />
             <TextField
               sx={{ paddingTop: "8px", paddingBottom: "8px" }}
@@ -192,40 +157,22 @@ const AddNewOccupationalEntry = ({
               value={diagnosisCodes}
               onChange={({ target }) => parseDiagnosis(target.value)}
             />
-            <div style={{ display: "flex", gap: "8px" }}>
-              <TextField
-                disabled={!isSickLeave}
-                sx={{
-                  paddingTop: "8px",
-                  paddingBottom: "8px",
-                  minWidth: "auto",
-                }}
-                type="date"
-                id="sickStartDate"
-                label="First day of sick leave"
-                defaultValue={parseDate(startDate)}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onChange={({ target }) => setStartDate(target.value)}
+            <div
+              style={{
+                border: "solid 1px",
+                borderRadius: "8px",
+                padding: "8px",
+                marginTop: "4px",
+                marginBottom: "4px",
+              }}
+            >
+              <p className="hcR">Health check rating</p>
+              <HealthRatingBar
+                rating={heathCheckRating}
+                showText={true}
+                readOnly={false}
+                handleChange={handleHealthRatingBar}
               />
-              <TextField
-                disabled={!isSickLeave}
-                sx={{
-                  paddingTop: "8px",
-                  paddingBottom: "8px",
-                  minWidth: "auto",
-                }}
-                type="date"
-                id="sickEndDate"
-                label="Last day of sick leave"
-                defaultValue={parseDate(startDate)}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onChange={({ target }) => setEndDate(target.value)}
-              />
-              <SickLeaveButton />
             </div>
             <Button
               color="error"
@@ -251,4 +198,4 @@ const AddNewOccupationalEntry = ({
   else return null;
 };
 
-export default AddNewOccupationalEntry;
+export default AddNewHealthCheckEntry;

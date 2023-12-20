@@ -39,7 +39,7 @@ export interface BaseEntry {
 
 export enum EntryType {
   Hospital = "Hospital",
-  HealthCheck = "HeathCheck",
+  HealthCheck = "HealthCheck",
   OccupationalHealthcare = "OccupationalHealthcare",
 }
 

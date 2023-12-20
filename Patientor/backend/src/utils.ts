@@ -82,7 +82,7 @@ export const toNewEntry = (object: unknown): NewEntry => {
       case "HealthCheck": {
         if ("healthCheckRating" in object) {
           const newEntry: NewEntry = {
-            type: "OccupationalHealthcare",
+            type: "HealthCheck",
             date: parseDate(object.date),
             description: parseString("description", object.description),
             specialist: parseString("specialist", object.specialist),
@@ -113,8 +113,8 @@ const parseHealthCheckRating = (param: unknown) => {
 
 const isHealthCheckRating = (param: number): param is HealthCheckRating => {
   return Object.values(HealthCheckRating)
-    .map((v) => v.toString())
-    .includes(param.toString());
+    .map((v) => v)
+    .includes(param);
 };
 
 const parseString = (key: string, param: unknown): string => {

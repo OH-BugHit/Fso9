@@ -1,11 +1,14 @@
-import { Rating } from '@mui/material';
-import { Favorite } from '@mui/icons-material';
+import { Rating } from "@mui/material";
+import { Favorite } from "@mui/icons-material";
 
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
+import { SyntheticEvent } from "react";
 
 type BarProps = {
-  rating: number;
+  rating: number | null;
   showText: boolean;
+  readOnly: boolean;
+  handleChange: (_event: SyntheticEvent, newValue: number | null) => void;
 };
 
 const StyledRating = styled(Rating)({
@@ -14,27 +17,32 @@ const StyledRating = styled(Rating)({
   },
   iconHover: {
     color: "#ff3d47",
-  }
+  },
 });
 
 const HEALTHBAR_TEXTS = [
-  "The patient is in great shape",
-  "The patient has a low risk of getting sick",
-  "The patient has a high risk of getting sick",
   "The patient has a diagnosed condition",
+  "The patient has a high risk of getting sick",
+  "The patient has a low risk of getting sick",
+  "The patient is in great shape",
 ];
 
-const HealthRatingBar = ({ rating, showText }: BarProps) => {
+const HealthRatingBar = ({
+  rating,
+  showText,
+  readOnly,
+  handleChange,
+}: BarProps) => {
   return (
     <div className="health-bar">
       <StyledRating
-        readOnly
-        value={4 - rating}
+        readOnly={readOnly}
+        value={rating}
+        onChange={handleChange}
         max={4}
         icon={<Favorite fontSize="inherit" />}
       />
-
-      {showText ? <p>{HEALTHBAR_TEXTS[rating]}</p> : null}
+      {showText && rating ? <p>{HEALTHBAR_TEXTS[rating - 1]}</p> : null}
     </div>
   );
 };

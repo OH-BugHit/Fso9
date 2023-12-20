@@ -3,6 +3,7 @@ import { Entry, Visibility } from "../../../types";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import AddNewOccupationalEntry from "./NewEntryTypes/NewOccupationalHC_Entry";
+import AddNewHealthCheckEntry from "./NewEntryTypes/NewHealthCheckEntry";
 
 interface newEntryProps {
   show: boolean;
@@ -66,14 +67,14 @@ const AddNewEntry = ({
         return (
           <div>
             <h2>New Health Check Entry</h2>
-            <AddNewHospitalEntry
+            <AddNewHealthCheckEntry
               show={show}
               setVisible={setVisible}
               entries={entries}
               setEntries={setEntries}
               patientID={patientID}
               setButtonVis={setButtonVis}
-            ></AddNewHospitalEntry>
+            ></AddNewHealthCheckEntry>
           </div>
         );
       }
