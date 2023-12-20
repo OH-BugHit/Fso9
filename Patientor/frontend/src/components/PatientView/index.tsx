@@ -42,13 +42,13 @@ const PatientView = ({ patient }: { patient: Patient | undefined }) => {
   } else {
     const genderSymbol = (gender: string | undefined) => {
       switch (gender) {
-        case "Male": {
+        case "male": {
           return "♂";
         }
-        case "Female": {
+        case "female": {
           return "♀";
         }
-        case "Other": {
+        case "other": {
           return "⚤";
         }
         default:
@@ -65,7 +65,13 @@ const PatientView = ({ patient }: { patient: Patient | undefined }) => {
         <h2>{`${name} ${genderSymbol(gender)}`}</h2>
         <p>ssn: {ssn}</p>
         <p>occupation: {occupation}</p>
-        <AddNewEntry show={addForm} setVisible={setAddForm}></AddNewEntry>
+        <AddNewEntry
+          show={addForm}
+          setVisible={setAddForm}
+          entries={entries}
+          setEntries={setEntries}
+          patientID={patient.id}
+        ></AddNewEntry>
         <h3>entries</h3>
         <div>
           {entries?.map((entry: Entry) => (

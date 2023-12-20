@@ -1,8 +1,9 @@
 .entry {
   border-radius: 8px;
   padding: 1%;
-  border: 1px solid;
+  border: 2px solid;
   margin-bottom: 8px;
+  border-color: grey;
 }
 
 .description {
@@ -12,4 +13,13 @@
 
 p {
   margin: auto;
+}
+
+.addEntryForm {
+  border: 2px solid;
+  border-radius: 8px;
+  border-color: burlywood;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 1%;
 }

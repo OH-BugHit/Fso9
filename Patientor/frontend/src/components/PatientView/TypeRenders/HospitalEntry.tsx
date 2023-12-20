@@ -9,10 +9,15 @@ interface HospitalProps {
 
 const discharge = (toRender: Discharge | undefined) => {
   if (toRender) {
+    if (!toRender.date) {
+      return null;
+    }
     return (
       <div>
-        <h4>Discharged {toRender.date} </h4>
-        <p className="description">{toRender.criteria}</p>
+        <h4 style={{ marginBottom: "2px" }}>Discharged {toRender.date} </h4>
+        <p className="description" style={{ marginBottom: "16px" }}>
+          {toRender.criteria}
+        </p>
       </div>
     );
   }

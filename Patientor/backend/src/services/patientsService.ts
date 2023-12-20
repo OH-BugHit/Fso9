@@ -42,8 +42,7 @@ const addEntry = (body: NewEntry, person: string) => {
   const oldEntry = findById(person);
   if (oldEntry) {
     oldEntry.entries.push(newEntry);
-    //patientsData.filter() tässä vois olla vielä vikaa, jos on niin tee paikallinen versio jsonista ja filtteröi tässä vaiheessa toi oldEntryÄijä pois ja lisää se uuden entryn kanssa sitten
-    patientsData.push(oldEntry);
+    patientsData.concat(oldEntry);
     return newEntry;
   } else {
     throw new Error(

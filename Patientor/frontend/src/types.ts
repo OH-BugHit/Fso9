@@ -21,6 +21,7 @@ export interface Patient {
 }
 
 // the entry types
+export type NewEntry = UnionOmit<Entry, "id">;
 
 export interface SickLeave {
   startDate: string;
@@ -75,3 +76,7 @@ export type Entry =
 
 // For "new patient"-form
 export type PatientFormValues = Omit<Patient, "id" | "entries">;
+
+type UnionOmit<T, K extends string | number | symbol> = T extends unknown
+  ? Omit<T, K>
+  : never;
