@@ -7,7 +7,7 @@ import {
   Visibility,
   newEntryProps,
 } from "../../../../types";
-import { ErrorField, submitNewEntry } from "../utils";
+import MultipleSelectChip, { ErrorField, submitNewEntry } from "../utils";
 import HealthRatingBar from "../../../HealthRatingBar";
 
 const AddNewHealthCheckEntry = ({
@@ -49,9 +49,7 @@ const AddNewHealthCheckEntry = ({
   const addEntry = (event: SyntheticEvent) => {
     event.preventDefault();
     if (heathCheckRating) {
-      const saveHealthRate = invertHealth(heathCheckRating);
-      console.log(saveHealthRate);
-
+      const saveHealthRate = invertHealth(heathCheckRating); // Käännetään rating-arvosta healthCheck ratingiin
       const entry: NewEntry = {
         date: parseDate(date),
         specialist: specialist,
@@ -149,6 +147,9 @@ const AddNewHealthCheckEntry = ({
               value={specialist}
               onChange={({ target }) => setSpecialist(target.value)}
             />
+            <MultipleSelectChip diagnoses={diagnosisCodes} /> VIE DIAGNOOSIEN
+            HAKU INDEXIIN JA VÄLITÄ NE TÄNNE JA SIT SINNE ENTRY RENDERIIN KANS!
+            SIT SIELTÄ SAA KOODIT
             <TextField
               sx={{ paddingTop: "8px", paddingBottom: "8px" }}
               label="Diagnosis codes"

@@ -1,7 +1,18 @@
 import axios from "axios";
-import { NewEntry, Entry } from "../../../types";
+import { NewEntry, Entry, Diagnosis } from "../../../types";
 import entryService from "../../../services/entries";
 import { ErrorOutline } from "@mui/icons-material";
+import {
+  SelectChangeEvent,
+  FormControl,
+  InputLabel,
+  Select,
+  OutlinedInput,
+  Box,
+  Chip,
+  MenuItem,
+} from "@mui/material";
+import React from "react";
 
 interface submitProps {
   entry: NewEntry;
@@ -54,3 +65,64 @@ export const ErrorField = ({ error }: { error: string }) => {
     </p>
   );
 };
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+export default function MultipleSelectChip({
+  diagnoses,
+}: {
+  diagnoses: Diagnosis["code"][];
+}) {
+  const [personName, setPersonName] = React.useState<string[]>([]);
+
+  const handleChange = (event: SelectChangeEvent<typeof personName>) => {
+    const {
+      target: { value },
+    } = event;
+    setPersonName(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
+
+  return (
+    <div>
+      <FormControl sx={{ m: 1, width: 300 }}>
+        <InputLabel id="demo-multiple-chip-label">Diagnosis codes</InputLabel>
+        <Select
+          labelId="demo-multiple-chip-label"
+          id="demo-multiple-chip"
+          multiple
+          value={personName}
+          onChange={handleChange}
+          input={
+            <OutlinedInput id="select-multiple-chip" label="Diagnosis codes" />
+          }
+          renderValue={(selected) => (
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+              {selected.map((value) => (
+                <Chip key={value} label={value} />
+              ))}
+            </Box>
+          )}
+          MenuProps={MenuProps}
+        >
+          {diagnoses.map((code) => (
+            <MenuItem key={code} value={code}>
+              {code}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </div>
+  );
+}
