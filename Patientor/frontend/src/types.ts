@@ -1,15 +1,18 @@
+// Diagnoosin tyypit
 export interface Diagnosis {
   code: string;
   name: string;
   latin?: string;
 }
 
+//Sukupuolet
 export enum Gender {
   Male = "male",
   Female = "female",
   Other = "other",
 }
 
+// Potilaan tyypit
 export interface Patient {
   id: string;
   name: string;
@@ -20,14 +23,16 @@ export interface Patient {
   entries: [];
 }
 
-// the entry types
+// Uuden entryn tyypit
 export type NewEntry = UnionOmit<Entry, "id">;
 
+// Sairasloman tyypit
 export interface SickLeave {
   startDate: string;
   endDate: string;
 }
 
+// Kirjauksen yhteiset tyypit
 export interface BaseEntry {
   id: string;
   date: string;
@@ -37,32 +42,38 @@ export interface BaseEntry {
   type: string;
 }
 
+// Eri kirjauksien tyypit
 export enum EntryType {
   Hospital = "Hospital",
   HealthCheck = "HealthCheck",
   OccupationalHealthcare = "OccupationalHealthcare",
 }
 
+// Komponentin näkyvyys
 export const enum Visibility {
   visible = "visible",
   hidden = "hidden",
   collapse = "collapse",
 }
 
+// TyöTH-kirjauksen tyypit
 export interface OccupationalHealthcareEntry extends BaseEntry {
   employerName: string;
   sickLeave?: SickLeave;
 }
 
+// Kotiutuksen tyypit
 export interface Discharge {
   date: string;
   criteria: string;
 }
 
+// Sairaalan kirjauksen tyypit
 export interface HospitalEntry extends BaseEntry {
   discharge?: Discharge;
 }
 
+// Terveysluokituksen tyypit
 export enum HealthCheckRating {
   "Healthy" = 0,
   "LowRisk" = 1,
@@ -70,11 +81,12 @@ export enum HealthCheckRating {
   "CriticalRisk" = 3,
 }
 
+// Terveystarkastuksen tyypit
 export interface HealthCheckEntry extends BaseEntry {
   healthCheckRating: HealthCheckRating;
 }
 
-// Entries
+// Uuden kirjauksen tyypit
 export interface newEntryProps {
   show: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -82,6 +94,7 @@ export interface newEntryProps {
   setEntries: React.Dispatch<React.SetStateAction<Entry[] | null>>;
   patientID: string;
   setButtonVis: React.Dispatch<React.SetStateAction<Visibility>>;
+  codebase: Diagnosis[];
 }
 
 export type Entry =

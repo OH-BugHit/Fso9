@@ -3,7 +3,6 @@ import { NewEntry, Entry, Diagnosis } from "../../../types";
 import entryService from "../../../services/entries";
 import { ErrorOutline } from "@mui/icons-material";
 import {
-  SelectChangeEvent,
   FormControl,
   InputLabel,
   Select,
@@ -11,6 +10,7 @@ import {
   Box,
   Chip,
   MenuItem,
+  SelectChangeEvent,
 } from "@mui/material";
 import React from "react";
 
@@ -23,6 +23,7 @@ interface submitProps {
   setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
+// Ainut eslint ohitus, tää käy näin minulle
 // eslint-disable-next-line react-refresh/only-export-components
 export const submitNewEntry = async ({
   entry,
@@ -77,48 +78,43 @@ const MenuProps = {
   },
 };
 
+interface ChipInterface {
+  diagnoses: Diagnosis[];
+  handleSelectDiagnose: (event: SelectChangeEvent<string[]>) => void;
+  selectedDiagnoses: string[];
+}
+
+// Multiple select komponentti, handleri tulee propsina.
 export default function MultipleSelectChip({
   diagnoses,
-}: {
-  diagnoses: Diagnosis["code"][];
-}) {
-  const [personName, setPersonName] = React.useState<string[]>([]);
-
-  const handleChange = (event: SelectChangeEvent<typeof personName>) => {
-    const {
-      target: { value },
-    } = event;
-    setPersonName(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
-  };
-
+  handleSelectDiagnose,
+  selectedDiagnoses,
+}: ChipInterface) {
   return (
     <div>
-      <FormControl sx={{ m: 1, width: 300 }}>
-        <InputLabel id="demo-multiple-chip-label">Diagnosis codes</InputLabel>
+      <FormControl fullWidth sx={{ paddingTop: "8px", paddingBottom: "8px" }}>
+        <InputLabel id="multiple-chip-label">Diagnosis codes</InputLabel>
         <Select
-          labelId="demo-multiple-chip-label"
-          id="demo-multiple-chip"
+          labelId="multiple-chip-label"
+          id="multiple-chip"
           multiple
-          value={personName}
-          onChange={handleChange}
+          value={selectedDiagnoses}
+          onChange={handleSelectDiagnose}
           input={
             <OutlinedInput id="select-multiple-chip" label="Diagnosis codes" />
           }
-          renderValue={(selected) => (
+          renderValue={(selectedDiagnoses) => (
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-              {selected.map((value) => (
+              {selectedDiagnoses.map((value) => (
                 <Chip key={value} label={value} />
               ))}
             </Box>
           )}
           MenuProps={MenuProps}
         >
-          {diagnoses.map((code) => (
-            <MenuItem key={code} value={code}>
-              {code}
+          {diagnoses.map((diagnose) => (
+            <MenuItem key={diagnose["code"]} value={diagnose["code"]}>
+              {diagnose["code"]} {diagnose["name"]}
             </MenuItem>
           ))}
         </Select>

@@ -30,7 +30,7 @@ const sickLeave = (toRender: SickLeave | undefined) => {
     return (
       <div>
         <h4>
-          Sickleave for {days} days
+          Sickleave for {days + 1} days
           <p className="description">
             from: {toRender.startDate} <br />
             to: {toRender.endDate}{" "}

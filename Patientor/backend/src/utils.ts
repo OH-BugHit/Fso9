@@ -1,3 +1,5 @@
+// Tämä utils on vastaanotetun tiedon käsittelyyn
+
 import {
   Diagnosis,
   Discharge,
@@ -34,6 +36,7 @@ export const toNewPatient = (object: unknown): NewPatientEntry => {
   throw new Error("Incorrect data: some fields are missing");
 };
 
+// Tuleva objekti on unknown, lähtevä on varmistettu NewEntry
 export const toNewEntry = (object: unknown): NewEntry => {
   if (!object || typeof object !== "object") {
     throw new Error("Incorrect or missing data");

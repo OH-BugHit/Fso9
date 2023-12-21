@@ -1,7 +1,6 @@
-import { Button, TextField } from "@mui/material";
+import { Button, SelectChangeEvent, TextField } from "@mui/material";
 import { SyntheticEvent, useState } from "react";
 import {
-  Diagnosis,
   HealthCheckRating,
   NewEntry,
   Visibility,
@@ -17,21 +16,22 @@ const AddNewHealthCheckEntry = ({
   setEntries,
   patientID,
   setButtonVis,
+  codebase,
 }: newEntryProps) => {
   const [error, setError] = useState<string>("");
   const [date, setDate] = useState<string | Date>(new Date());
   const [specialist, setSpecialist] = useState<string>("");
-  const [diagnosisCodes, setDiagnosisCodes] = useState<Diagnosis["code"][]>([]);
   const [description, setDescription] = useState<string>("");
   const [heathCheckRating, setHeathCheckRating] =
     useState<HealthCheckRating | null>(HealthCheckRating.Healthy);
+  const [selectedDiagnosed, setSelectedDiagnosed] = useState<string[]>([]);
 
   const onCancel = () => {
     setButtonVis(Visibility.visible);
     setVisible(false);
   };
 
-  // Itse ehkä olisin numeroinut alunperin eritavalla nämä, mutta "tietokannassa" jo näin niin tehdään tällainen käännös
+  // Itse ehkä olisin numeroinut alunperin eritavalla nämä, mutta "tietokannassa" jo näin niin tehdään tietenkin tällainen käännös
   const invertHealth = (num: HealthCheckRating): HealthCheckRating => {
     const oikeaNum = (num as number) - 1;
     switch (oikeaNum as HealthCheckRating) {
@@ -46,6 +46,7 @@ const AddNewHealthCheckEntry = ({
     }
   };
 
+  // Kirjauksen koostaminen ja backendiin lähtys
   const addEntry = (event: SyntheticEvent) => {
     event.preventDefault();
     if (heathCheckRating) {
@@ -55,7 +56,7 @@ const AddNewHealthCheckEntry = ({
         specialist: specialist,
         description: description,
         type: "HealthCheck",
-        diagnosisCodes: diagnosisCodes,
+        diagnosisCodes: selectedDiagnosed,
         healthCheckRating: saveHealthRate,
       };
 
@@ -68,13 +69,11 @@ const AddNewHealthCheckEntry = ({
         patientID,
         setError,
       });
-      if (error === "") {
-        setButtonVis(Visibility.visible);
-      }
+      setButtonVis(Visibility.visible);
       // Nollaillaan kaikki
       setDate(new Date());
       setSpecialist("");
-      setDiagnosisCodes([]);
+      setSelectedDiagnosed([]);
       setDescription("");
       setHeathCheckRating(null);
     } else {
@@ -84,10 +83,14 @@ const AddNewHealthCheckEntry = ({
     }
   };
 
-  const parseDiagnosis = (data: string) => {
-    let parsed = data.split(","); // Katkotaan arrayksi
-    parsed = parsed.map((a) => a.trim()); //Poistetaan välilyönti
-    setDiagnosisCodes(parsed); // Asetetaan
+  // Handleri Multiple selectoria varten (diagnoosien valinta)
+  const handleSelectDiagnose = (
+    event: SelectChangeEvent<typeof selectedDiagnosed>
+  ) => {
+    const {
+      target: { value },
+    } = event;
+    setSelectedDiagnosed(typeof value === "string" ? value.split(",") : value);
   };
 
   const parseDate = (date: Date | string) => {
@@ -147,16 +150,10 @@ const AddNewHealthCheckEntry = ({
               value={specialist}
               onChange={({ target }) => setSpecialist(target.value)}
             />
-            <MultipleSelectChip diagnoses={diagnosisCodes} /> VIE DIAGNOOSIEN
-            HAKU INDEXIIN JA VÄLITÄ NE TÄNNE JA SIT SINNE ENTRY RENDERIIN KANS!
-            SIT SIELTÄ SAA KOODIT
-            <TextField
-              sx={{ paddingTop: "8px", paddingBottom: "8px" }}
-              label="Diagnosis codes"
-              placeholder="Z57.1, N30.0"
-              fullWidth
-              value={diagnosisCodes}
-              onChange={({ target }) => parseDiagnosis(target.value)}
+            <MultipleSelectChip
+              diagnoses={codebase}
+              handleSelectDiagnose={handleSelectDiagnose}
+              selectedDiagnoses={selectedDiagnosed}
             />
             <div
               style={{

@@ -1,12 +1,7 @@
-import { Button, TextField } from "@mui/material";
+import { Button, SelectChangeEvent, TextField } from "@mui/material";
 import { SyntheticEvent, useState } from "react";
-import {
-  Diagnosis,
-  NewEntry,
-  Visibility,
-  newEntryProps,
-} from "../../../../types";
-import { ErrorField, submitNewEntry } from "../utils";
+import { NewEntry, Visibility, newEntryProps } from "../../../../types";
+import MultipleSelectChip, { ErrorField, submitNewEntry } from "../utils";
 
 const AddNewOccupationalEntry = ({
   show,
@@ -15,22 +10,34 @@ const AddNewOccupationalEntry = ({
   setEntries,
   patientID,
   setButtonVis,
+  codebase,
 }: newEntryProps) => {
   const [error, setError] = useState<string>("");
   const [date, setDate] = useState<string | Date>(new Date());
   const [specialist, setSpecialist] = useState<string>("");
-  const [diagnosisCodes, setDiagnosisCodes] = useState<Diagnosis["code"][]>([]);
   const [description, setDescription] = useState<string>("");
   const [startDate, setStartDate] = useState<Date | string>(new Date());
   const [endDate, setEndDate] = useState<Date | string>(new Date());
   const [employerName, setEmployerName] = useState<string>("");
   const [isSickLeave, setIsSickLeave] = useState<boolean>(false);
+  const [selectedDiagnosed, setSelectedDiagnosed] = useState<string[]>([]);
 
   const onCancel = () => {
     setButtonVis(Visibility.visible);
     setVisible(false);
   };
 
+  // Handleri Multiple selectoria varten (diagnoosien valinta)
+  const handleSelectDiagnose = (
+    event: SelectChangeEvent<typeof selectedDiagnosed>
+  ) => {
+    const {
+      target: { value },
+    } = event;
+    setSelectedDiagnosed(typeof value === "string" ? value.split(",") : value);
+  };
+
+  // Kirjauksen koostaminen ja backendiin lähtys
   const addEntry = (event: SyntheticEvent) => {
     event.preventDefault();
     setButtonVis(Visibility.visible);
@@ -41,7 +48,7 @@ const AddNewOccupationalEntry = ({
         specialist: specialist,
         description: description,
         type: "OccupationalHealthcare",
-        diagnosisCodes: diagnosisCodes,
+        diagnosisCodes: selectedDiagnosed,
         employerName: employerName,
         sickLeave: {
           startDate: parseDate(startDate),
@@ -54,7 +61,7 @@ const AddNewOccupationalEntry = ({
         specialist: specialist,
         description: description,
         type: "OccupationalHealthcare",
-        diagnosisCodes: diagnosisCodes,
+        diagnosisCodes: selectedDiagnosed,
         employerName: employerName,
       };
     }
@@ -71,17 +78,11 @@ const AddNewOccupationalEntry = ({
     // Nollaillaan kaikki
     setDate(new Date());
     setSpecialist("");
-    setDiagnosisCodes([]);
+    setSelectedDiagnosed([]);
     setDescription("");
     setStartDate(new Date());
     setEndDate(new Date());
     setEmployerName("");
-  };
-
-  const parseDiagnosis = (data: string) => {
-    let parsed = data.split(","); // Katkotaan arrayksi
-    parsed = parsed.map((a) => a.trim()); //Poistetaan välilyönti
-    setDiagnosisCodes(parsed); // Asetetaan
   };
 
   const parseDate = (date: Date | string) => {
@@ -184,13 +185,10 @@ const AddNewOccupationalEntry = ({
               value={specialist}
               onChange={({ target }) => setSpecialist(target.value)}
             />
-            <TextField
-              sx={{ paddingTop: "8px", paddingBottom: "8px" }}
-              label="Diagnosis codes"
-              placeholder="Z57.1, N30.0"
-              fullWidth
-              value={diagnosisCodes}
-              onChange={({ target }) => parseDiagnosis(target.value)}
+            <MultipleSelectChip
+              diagnoses={codebase}
+              handleSelectDiagnose={handleSelectDiagnose}
+              selectedDiagnoses={selectedDiagnosed}
             />
             <div style={{ display: "flex", gap: "8px" }}>
               <TextField

@@ -1,36 +1,41 @@
 import AddNewHospitalEntry from "./NewEntryTypes/NewHospitalEntry";
-import { Entry, Visibility } from "../../../types";
+import { Diagnosis, Entry, Visibility } from "../../../types";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import AddNewOccupationalEntry from "./NewEntryTypes/NewOccupationalHC_Entry";
 import AddNewHealthCheckEntry from "./NewEntryTypes/NewHealthCheckEntry";
 
-interface newEntryProps {
+interface addNewEntryProps {
   show: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
   entries: Entry[] | null;
   setEntries: React.Dispatch<React.SetStateAction<Entry[] | null>>;
   patientID: string;
+  codebase: Diagnosis[];
 }
 
+// Uuden kirjauksen lisääminen
 const AddNewEntry = ({
   show,
   setVisible,
   entries,
   setEntries,
   patientID,
-}: newEntryProps) => {
+  codebase,
+}: addNewEntryProps) => {
   const [form, setForm] = useState<string>("");
   const [buttonVis, setButtonVis] = useState<Visibility>(Visibility.visible);
   useEffect(() => {
     setForm("");
   }, [show]);
 
+  // Formin valinnan handleri
   const pickForm = (form: string) => {
     setButtonVis(Visibility.collapse);
     setForm(form);
   };
 
+  // Kirjauksen tyypin mukaan esittäminen
   const showEntryForm = () => {
     switch (form) {
       case "Hospital": {
@@ -44,6 +49,7 @@ const AddNewEntry = ({
               setEntries={setEntries}
               patientID={patientID}
               setButtonVis={setButtonVis}
+              codebase={codebase}
             ></AddNewHospitalEntry>
           </div>
         );
@@ -59,6 +65,7 @@ const AddNewEntry = ({
               setEntries={setEntries}
               patientID={patientID}
               setButtonVis={setButtonVis}
+              codebase={codebase}
             ></AddNewOccupationalEntry>
           </div>
         );
@@ -74,6 +81,7 @@ const AddNewEntry = ({
               setEntries={setEntries}
               patientID={patientID}
               setButtonVis={setButtonVis}
+              codebase={codebase}
             ></AddNewHealthCheckEntry>
           </div>
         );

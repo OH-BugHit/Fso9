@@ -33,6 +33,7 @@ export const codes = ({ toRender, codebase }: codeProps) => {
   return <p></p>;
 };
 
+// Näytön vieritys ylös
 export const scrollToTop = () => {
   window.scrollTo({
     top: 0,
